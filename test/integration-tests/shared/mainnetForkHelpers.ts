@@ -16,6 +16,9 @@ export const WETH = WETH9[1]
 export const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
 export const USDT = new Token(1, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
+const INFURA_API_KEY = process.env.INFURA_API_KEY
+export const MAINNET_RPC_URL = INFURA_API_KEY ? `https://mainnet.infura.io/v3/${INFURA_API_KEY}` : (process.env.FORK_URL || "https://cloudflare-eth.com")
+
 export const GALA = new Token(1, '0x15D4c048F83bd7e37d49eA4C83a07267Ec4203dA', 8, 'GALA', 'Gala')
 export const SWAP_ROUTER_V2 = '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45'
 export const V2_FACTORY = 0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f
@@ -96,7 +99,7 @@ export const resetFork = async () => {
     params: [
       {
         forking: {
-          jsonRpcUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+          jsonRpcUrl: MAINNET_RPC_URL,
           blockNumber: 20010000,
         },
       },

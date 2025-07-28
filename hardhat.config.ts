@@ -5,6 +5,10 @@ import '@nomicfoundation/hardhat-foundry'
 import dotenv from 'dotenv'
 dotenv.config()
 
+const INFURA_API_KEY = process.env.INFURA_API_KEY
+const DEFAULT_RPC_URL = process.env.FORK_URL || "https://cloudflare-eth.com"
+const MAINNET_RPC_URL = INFURA_API_KEY ? `https://mainnet.infura.io/v3/${INFURA_API_KEY}` : DEFAULT_RPC_URL
+
 const DEFAULT_COMPILER_SETTINGS = {
   version: '0.8.26',
   settings: {
@@ -29,24 +33,24 @@ export default {
       allowUnlimitedContractSize: false,
       chainId: 1,
       forking: {
-        url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+        url: MAINNET_RPC_URL,
         blockNumber: 20010000,
       },
     },
     mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: MAINNET_RPC_URL,
     },
     ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `MAINNET_RPC_URL`,
     },
     rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `MAINNET_RPC_URL`,
     },
     goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `MAINNET_RPC_URL`,
     },
     kovan: {
-      url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `MAINNET_RPC_URL`,
     },
     arbitrumRinkeby: {
       url: `https://rinkeby.arbitrum.io/rpc`,
@@ -61,7 +65,7 @@ export default {
       url: `https://mainnet.optimism.io`,
     },
     polygon: {
-      url: `https://polygon-mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `MAINNET_RPC_URL`,
     },
     base: {
       url: `https://developer-access-mainnet.base.org`,

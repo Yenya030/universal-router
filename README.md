@@ -131,10 +131,14 @@ Clone the repository with:
 git clone --recurse-submodules https://github.com/Uniswap/universal-router.git
 ```
 
-2. Create `.env` file with api key
+2. (Optional) Create a `.env` file with a mainnet RPC endpoint. If `INFURA_API_KEY`
+   is not provided, tests will fall back to the public `cloudflare-eth.com` RPC or
+   the value of `FORK_URL`.
 
 ```
 INFURA_API_KEY='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+# or
+FORK_URL='https://your.rpc.endpoint'
 ```
 
 3. Run yarn commands to compile and test
