@@ -81,3 +81,9 @@ This document lists the attack vectors that have been tested against the Univers
 - **Vector**: Sweep ERC20 tokens and ETH to verify correct transfers and proper error handling when the minimum amount is not met.
 - **Result**: Handled correctly. Sweeps succeeded when conditions were met and reverted otherwise.
 - **Test**: `UniversalRouterTest`
+
+
+## Transfer to reserved addresses
+- **Vector:** Attempt to transfer ERC20 tokens to address `0x0000000000000000000000000000000000000001` via the router.
+- **Finding:** Tokens are incorrectly sent to the caller instead of the intended address. This occurs because the router maps address `1` to `MSG_SENDER`.
+- **Test:** `testTransferToReservedAddress` in `test/foundry-tests/UniversalRouter.t.sol` demonstrates the issue.
