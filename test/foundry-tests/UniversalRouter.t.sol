@@ -108,4 +108,12 @@ contract UniversalRouterTest is Test {
         assertEq(erc20.balanceOf(address(1)), 0);
         assertEq(erc20.balanceOf(address(this)), AMOUNT);
     }
+    
+    function testLengthMismatch() public {
+        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.SWEEP)));
+        bytes[] memory inputs = new bytes[](0);
+
+        vm.expectRevert(IUniversalRouter.LengthMismatch.selector);
+        router.execute(commands, inputs);
+    }
 }
