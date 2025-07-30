@@ -108,3 +108,10 @@ This document lists the attack vectors that have been tested against the Univers
 ## Reentrancy during WETH deposit
 - **Vector**: Attempted reentrancy through a malicious WETH implementation when depositing.
 - **Result**: Existing `ReenteringWETH` test shows reentrancy is prevented by the lock mechanism.
+
+
+## Address Collision with `ADDRESS_THIS`
+- **Description**: Commands that accept a recipient interpret address `0x0000000000000000000000000000000000000002` as a sentinel value meaning `address(this)`. An honest user who wishes to send tokens to that address would instead transfer tokens to the router itself.
+- **Test**: Added `AddressCollision.t.sol` that transfers ERC20 tokens to address `0x2` using the `TRANSFER` command.
+- **Result**: Tokens were retained by the router and not delivered to address `0x2`.
+- **Outcome**: Bug discovered. The router misroutes transfers when the recipient equals the sentinel constant.
