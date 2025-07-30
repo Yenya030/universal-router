@@ -93,6 +93,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: Transaction reverts with `UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT` showing Universal Router does not gracefully handle looping paths.
   - **Bug?**: Yes. The router fails inside the pair contract instead of validating the path and reverting early.
 
+## Looping V3 swap path
+  - **Vector**: Provide a Uniswap v3 path that loops back to the input token (e.g. `[WETH, DAI, WETH]`) when calling `V3_SWAP_EXACT_IN`.
+  - **Result**: The swap reverts from the pool (for example with `STF`) rather than the router validating the path.
+  - **Bug?**: Yes. Similar to the V2 case, the router relies on the pool revert instead of rejecting looping paths.
+
 
 ## Mismatched Commands and Inputs
 - **Description**: Call `UniversalRouter.execute` with a commands array that does not match the length of the inputs array.
