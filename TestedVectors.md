@@ -98,3 +98,13 @@ This document lists the attack vectors that have been tested against the Univers
 - **Description**: Call `UniversalRouter.execute` with a commands array that does not match the length of the inputs array.
 - **Result**: The router reverted with the `LengthMismatch` custom error, preventing incorrect execution.
 - **Status**: Handled by the codebase.
+
+
+## Sub-plan failure handling
+- **Vector**: Supply a failing sub-plan wrapped with the `ALLOW_REVERT` flag and ensure execution continues.
+- **Result**: Added `SubPlanRevert.test.ts` which confirms the router skips the failing sub-plan and processes subsequent commands without reverting.
+
+
+## Reentrancy during WETH deposit
+- **Vector**: Attempted reentrancy through a malicious WETH implementation when depositing.
+- **Result**: Existing `ReenteringWETH` test shows reentrancy is prevented by the lock mechanism.
