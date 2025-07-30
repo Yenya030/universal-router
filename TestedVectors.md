@@ -143,3 +143,10 @@ This document lists the attack vectors that have been tested against the Univers
 |-------|-------------|-------|
 | Reentrancy via WETH deposit | A malicious WETH token calls the router again during `deposit()`. The router's reentrancy lock caused the call to revert with `NotAllowedReenter`. | Handled |
 | Invalid payPortion bips | Calling `payPortion` with >10000 bips causes a revert via `InvalidBips`. | Handled |
+
+
+## Deadline Bypass via Two-Argument Execute
+- **Vector**: Call `execute(bytes,bytes[])` directly without providing a deadline.
+- **Result**: Execution succeeds even though a past deadline would cause `execute(bytes,bytes[],uint256)` to revert.
+- **Test**: `UniversalRouter.test.ts` includes a new case "allows bypassing the deadline by calling the two-argument execute".
+- **Outcome**: Bug discovered – the router's deadline check can be skipped.
