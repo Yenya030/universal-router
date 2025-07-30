@@ -135,6 +135,18 @@ describe('UniversalRouter', () => {
         'NotAllowedReenter'
       )
     })
+
+    it('allows bypassing the deadline by calling the two-argument execute', async () => {
+      const { commands, inputs } = planner
+      const invalidDeadline = 10
+
+      await expect(router['execute(bytes,bytes[],uint256)'](commands, inputs, invalidDeadline)).to.be.revertedWithCustomError(
+        router,
+        'TransactionDeadlinePassed'
+      )
+
+      await expect(router['execute(bytes,bytes[])'](commands, inputs)).to.not.be.reverted
+    })
   })
 })
 
