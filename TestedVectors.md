@@ -98,6 +98,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The swap reverts from the pool (for example with `STF`) rather than the router validating the path.
   - **Bug?**: Yes. Similar to the V2 case, the router relies on the pool revert instead of rejecting looping paths.
 
+## Looping V4 swap path
+  - **Vector**: Craft a Uniswap v4 path where the final hop returns to the starting currency.
+  - **Result**: The router allows the call to proceed and the transaction reverts from the pool manager rather than failing fast.
+  - **Bug?**: Yes. As with V2/V3, the router does not detect the loop and relies on lower level reverts.
+
 
 ## Mismatched Commands and Inputs
 - **Description**: Call `UniversalRouter.execute` with a commands array that does not match the length of the inputs array.
