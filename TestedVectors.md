@@ -156,3 +156,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Use a Uniswap v2 path with identical tokens such as `[WETH, WETH]`.
   - **Result**: The router attempts to access a non-existent pair and reverts with a generic error instead of `V2InvalidPath`.
   - **Bug?**: Yes. The router fails to validate identical-token paths.
+
+## Duplicate tokens in V3 path
+  - **Vector**: Use a Uniswap v3 path with identical tokens such as `[WETH, WETH]`.
+  - **Result**: The router attempts to call a non-existent pool and reverts with a generic error instead of validating the path.
+  - **Bug?**: Yes. The router fails to detect identical-token paths for v3 swaps.
