@@ -9,7 +9,6 @@ import {Commands} from '../../contracts/libraries/Commands.sol';
 import {MockERC20} from './mock/MockERC20.sol';
 import {ExampleModule} from '../../contracts/test/ExampleModule.sol';
 import {RouterParameters} from '../../contracts/types/RouterParameters.sol';
-import {IUniversalRouter} from '../../contracts/interfaces/IUniversalRouter.sol';
 import {ERC20} from 'solmate/src/tokens/ERC20.sol';
 import 'permit2/src/interfaces/IAllowanceTransfer.sol';
 import {IERC165} from '@openzeppelin/contracts/utils/introspection/IERC165.sol';
@@ -98,6 +97,18 @@ contract UniversalRouterTest is Test {
         router.execute(commands, inputs);
     }
 
+    function testTransferToReservedAddress() public {
+        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.TRANSFER)));
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(address(erc20), address(1), AMOUNT);
+
+        erc20.mint(address(router), AMOUNT);
+
+        router.execute(commands, inputs);
+        assertEq(erc20.balanceOf(address(1)), 0);
+        assertEq(erc20.balanceOf(address(this)), AMOUNT);
+    }
+    
     function testLengthMismatch() public {
         bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.SWEEP)));
         bytes[] memory inputs = new bytes[](0);
