@@ -53,3 +53,10 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Provide extremely large amounts to `calculatePortion` to test arithmetic overflow handling.
   - **Result**: Solidity 0.8 built‑in overflow checks correctly revert on overflow. No unexpected behaviour observed.
   - **Status**: **Handled** – library reverts as expected on overflow.
+
+| Vector | Status | Notes |
+| ------ | ------ | ----- |
+| Reentrancy during `execute` via malicious ERC20 (wrap/unwrap) | Handled | Existing tests use a `ReenteringWETH` contract and the lock prevents reentry. |
+| Invalid command bytes | Handled | `UniversalRouter` reverts with `InvalidCommandType` when unknown commands are provided. |
+| Sweeping with excessively large portion | Handled | `Payments.payPortion` reverts with `InvalidBips` when over 100% is requested. |
+| Use of `v3SwapExactOutput` with revert before clearing `MaxInputAmount` | Not tested* | Would verify that storage reset works correctly on revert but requires forked environment. |
