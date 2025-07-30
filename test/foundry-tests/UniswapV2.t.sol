@@ -175,6 +175,18 @@ abstract contract UniswapV2Test is Test {
         router.execute(commands, inputs);
     }
 
+    function testExactInputSameTokenPathReverts() public {
+        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.V2_SWAP_EXACT_IN)));
+        address[] memory path = new address[](2);
+        path[0] = token0();
+        path[1] = token0();
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(ActionConstants.MSG_SENDER, AMOUNT, 0, path, true);
+
+        vm.expectRevert();
+        router.execute(commands, inputs);
+    }
+
     function token0() internal virtual returns (address);
     function token1() internal virtual returns (address);
 

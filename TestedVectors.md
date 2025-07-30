@@ -99,6 +99,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The swap reverts from the pool (for example with `STF`) rather than the router validating the path.
   - **Bug?**: Yes. Similar to the V2 case, the router relies on the pool revert instead of rejecting looping paths.
 
+## Duplicate tokens in V2 path
+  - **Vector**: Use a Uniswap v2 path with identical tokens such as `[WETH, WETH]`.
+  - **Result**: The router attempts to access a non-existent pair and reverts with a generic error instead of `V2InvalidPath`.
+  - **Bug?**: Yes. The router fails to validate identical-token paths.
+
 
 ## Looping V4 swap path
   - **Vector**: Craft a Uniswap v4 path where the final hop returns to the starting currency.
