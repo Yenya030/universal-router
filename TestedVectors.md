@@ -98,6 +98,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The swap reverts from the pool (for example with `STF`) rather than the router validating the path.
   - **Bug?**: Yes. Similar to the V2 case, the router relies on the pool revert instead of rejecting looping paths.
 
+## Invalid V3 path length
+  - **Vector**: Call `V3_SWAP_EXACT_IN` with a path that is shorter than the required 43 bytes.
+  - **Result**: Reverts with `SliceOutOfBounds` from the library, demonstrating the router rejects malformed paths.
+  - **Status**: Handled by the codebase.
+
 
 ## Mismatched Commands and Inputs
 - **Description**: Call `UniversalRouter.execute` with a commands array that does not match the length of the inputs array.
