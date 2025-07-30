@@ -115,3 +115,8 @@ This document lists the attack vectors that have been tested against the Univers
 - **Test**: Added `AddressCollision.t.sol` that transfers ERC20 tokens to address `0x2` using the `TRANSFER` command.
 - **Result**: Tokens were retained by the router and not delivered to address `0x2`.
 - **Outcome**: Bug discovered. The router misroutes transfers when the recipient equals the sentinel constant.
+
+
+| Vector | Result |
+|-------|-------|
+| Calling `permit2TransferFrom` with `AllowanceTransferDetails.from` not matching the provided owner | Reverts with `FromAddressIsNotOwner`, as expected |
