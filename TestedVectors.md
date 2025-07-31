@@ -174,6 +174,24 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `MSG_SENDER`.
   - **Result**: The router checks the balance of address `0x1` instead of the caller and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command does not map sentinel addresses and fails for valid callers.
+## Reentrancy via WETH withdraw
+- **Vector**: Use a malicious WETH token whose `withdraw()` function attempts to call the router again.
+- **Result**: The reentrant call is rejected with `ContractLocked`, causing the malicious token to revert with `NotAllowedReenter`.
+- **Test**: `ReentrancyWithdraw.t.sol` demonstrates the revert.
+- **Status**: Handled – the reentrancy guard stops reentry during WETH withdrawal.
+
+
+## Duplicate tokens in V3 path
+  - **Vector**: Provide a Uniswap v3 path where the same token appears twice (e.g. `[WETH, 3000, WETH]`) when calling `V3_SWAP_EXACT_IN`.
+  - **Result**: The router calls into a pool address that does not exist and the transaction reverts without a helpful error message.
+  - **Bug?**: Yes. There is no validation that the two tokens differ when building the v3 path.
+
+
+## MaxInputAmount reset on revert
+  - **Vector**: Call `V3_SWAP_EXACT_OUT` with an amountOut that causes the swap to revert, then perform a valid swap.
+  - **Result**: The second swap succeeds, demonstrating the `MaxInputAmount` transient storage was cleared when the first call reverted.
+  - **Status**: Handled – reverting a swap does not leave stale values in transient storage.
+
 
 ## Balance check using ADDRESS_THIS
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `ADDRESS_THIS`.
