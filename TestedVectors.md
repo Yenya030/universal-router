@@ -174,3 +174,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `MSG_SENDER`.
   - **Result**: The router checks the balance of address `0x1` instead of the caller and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command does not map sentinel addresses and fails for valid callers.
+## Reentrancy via WETH withdraw
+- **Vector**: Use a malicious WETH token whose `withdraw()` function attempts to call the router again.
+- **Result**: The reentrant call is rejected with `ContractLocked`, causing the malicious token to revert with `NotAllowedReenter`.
+- **Test**: `ReentrancyWithdraw.t.sol` demonstrates the revert.
+- **Status**: Handled – the reentrancy guard stops reentry during WETH withdrawal.
