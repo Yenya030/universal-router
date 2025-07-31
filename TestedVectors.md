@@ -162,3 +162,9 @@ This document lists the attack vectors that have been tested against the Univers
 - **Result**: ETH is received without calling `receive()` and the balance increases.
 - **Test**: `ForceETH.t.sol` self-destructs to the router and asserts the balance.
 - **Outcome**: Handled – forced transfers are possible but do not break router logic.
+
+
+## Invalid V2 path length
+  - **Vector**: Provide a V2 swap path with fewer than two tokens.
+  - **Result**: The router reverts with `V2InvalidPath` as soon as execution begins.
+  - **Status**: **Handled** – path length is validated correctly.
