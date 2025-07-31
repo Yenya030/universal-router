@@ -185,3 +185,9 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Provide a Uniswap v3 path where the same token appears twice (e.g. `[WETH, 3000, WETH]`) when calling `V3_SWAP_EXACT_IN`.
   - **Result**: The router calls into a pool address that does not exist and the transaction reverts without a helpful error message.
   - **Bug?**: Yes. There is no validation that the two tokens differ when building the v3 path.
+
+
+## MaxInputAmount reset on revert
+  - **Vector**: Call `V3_SWAP_EXACT_OUT` with an amountOut that causes the swap to revert, then perform a valid swap.
+  - **Result**: The second swap succeeds, demonstrating the `MaxInputAmount` transient storage was cleared when the first call reverted.
+  - **Status**: Handled – reverting a swap does not leave stale values in transient storage.
