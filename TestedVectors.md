@@ -191,3 +191,9 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `V3_SWAP_EXACT_OUT` with an amountOut that causes the swap to revert, then perform a valid swap.
   - **Result**: The second swap succeeds, demonstrating the `MaxInputAmount` transient storage was cleared when the first call reverted.
   - **Status**: Handled – reverting a swap does not leave stale values in transient storage.
+
+
+## Balance check using ADDRESS_THIS
+  - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `ADDRESS_THIS`.
+  - **Result**: The router checks the balance of address `0x2` rather than its own address and reverts with `BalanceTooLow`.
+  - **Bug?**: Yes. The command fails to map the `ADDRESS_THIS` sentinel to `address(this)`.
