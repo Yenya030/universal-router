@@ -2,7 +2,7 @@ import { CommandType, RoutePlanner } from './shared/planner'
 import { expect } from './shared/expect'
 import { UniversalRouter } from '../../typechain'
 import { resetFork, USDC } from './shared/mainnetForkHelpers'
-import { ALICE_ADDRESS, DEADLINE } from './shared/constants'
+import { ALICE_ADDRESS, DEADLINE, MSG_SENDER } from './shared/constants'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import hre from 'hardhat'
 import deployUniversalRouter from './shared/deployUniversalRouter'
@@ -43,6 +43,16 @@ describe('Check Ownership', () => {
     it('reverts for insufficient balance', async () => {
       const invalidBalance = aliceUSDCBalance.add(1)
       planner.addCommand(CommandType.BALANCE_CHECK_ERC20, [ALICE_ADDRESS, USDC.address, invalidBalance])
+
+      const { commands, inputs } = planner
+      const customErrorSelector = findCustomErrorSelector(router.interface, 'BalanceTooLow')
+      await expect(router['execute(bytes,bytes[],uint256)'](commands, inputs, DEADLINE))
+        .to.be.revertedWithCustomError(router, 'ExecutionFailed')
+        .withArgs(0, customErrorSelector)
+    })
+
+    it('reverts when using MSG_SENDER as the owner address', async () => {
+      planner.addCommand(CommandType.BALANCE_CHECK_ERC20, [MSG_SENDER, USDC.address, aliceUSDCBalance])
 
       const { commands, inputs } = planner
       const customErrorSelector = findCustomErrorSelector(router.interface, 'BalanceTooLow')

@@ -10,6 +10,7 @@ import {UniversalRouter} from '../../contracts/UniversalRouter.sol';
 import {Payments} from '../../contracts/modules/Payments.sol';
 import {ActionConstants} from '@uniswap/v4-periphery/src/libraries/ActionConstants.sol';
 import {Commands} from '../../contracts/libraries/Commands.sol';
+import {V2SwapRouter} from '../../contracts/modules/uniswap/v2/V2SwapRouter.sol';
 import {RouterParameters} from '../../contracts/types/RouterParameters.sol';
 
 abstract contract UniswapV2Test is Test {
@@ -184,6 +185,17 @@ abstract contract UniswapV2Test is Test {
         inputs[0] = abi.encode(ActionConstants.MSG_SENDER, AMOUNT, 0, path, true);
 
         vm.expectRevert();
+        router.execute(commands, inputs);
+    }
+
+    function testPathLengthOneReverts() public {
+        bytes memory commands = abi.encodePacked(bytes1(uint8(Commands.V2_SWAP_EXACT_IN)));
+        address[] memory path = new address[](1);
+        path[0] = token0();
+        bytes[] memory inputs = new bytes[](1);
+        inputs[0] = abi.encode(ActionConstants.MSG_SENDER, AMOUNT, 0, path, true);
+
+        vm.expectRevert(V2SwapRouter.V2InvalidPath.selector);
         router.execute(commands, inputs);
     }
 
