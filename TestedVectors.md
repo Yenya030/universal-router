@@ -157,6 +157,19 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router attempts to access a non-existent pair and reverts with a generic error instead of `V2InvalidPath`.
   - **Bug?**: Yes. The router fails to validate identical-token paths.
 
+## Forced ETH via Self-Destruct
+- **Vector**: Send ETH to the router via a contract that self-destructs.
+- **Result**: ETH is received without calling `receive()` and the balance increases.
+- **Test**: `ForceETH.t.sol` self-destructs to the router and asserts the balance.
+- **Outcome**: Handled – forced transfers are possible but do not break router logic.
+
+
+## Invalid V2 path length
+  - **Vector**: Provide a V2 swap path with fewer than two tokens.
+  - **Result**: The router reverts with `V2InvalidPath` as soon as execution begins.
+  - **Status**: **Handled** – path length is validated correctly.
+
+
 ## Balance check using MSG_SENDER
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `MSG_SENDER`.
   - **Result**: The router checks the balance of address `0x1` instead of the caller and reverts with `BalanceTooLow`.
