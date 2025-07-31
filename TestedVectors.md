@@ -157,6 +157,13 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router attempts to access a non-existent pair and reverts with a generic error instead of `V2InvalidPath`.
   - **Bug?**: Yes. The router fails to validate identical-token paths.
 
+
+## Duplicate tokens in V3 path
+  - **Vector**: Use a Uniswap v3 path with identical tokens such as `[WETH, WETH]`.
+  - **Result**: The router attempts to call a non-existent pool and reverts with a generic error instead of validating the path.
+  - **Bug?**: Yes. The router fails to detect identical-token paths for v3 swaps.
+
+
 ## Forced ETH via Self-Destruct
 - **Vector**: Send ETH to the router via a contract that self-destructs.
 - **Result**: ETH is received without calling `receive()` and the balance increases.
@@ -174,3 +181,5 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `MSG_SENDER`.
   - **Result**: The router checks the balance of address `0x1` instead of the caller and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command does not map sentinel addresses and fails for valid callers.
+
+
