@@ -157,6 +157,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router attempts to access a non-existent pair and reverts with a generic error instead of `V2InvalidPath`.
   - **Bug?**: Yes. The router fails to validate identical-token paths.
 
+## Duplicate tokens in V3 path
+  - **Vector**: Provide a Uniswap v3 path where the same token appears twice (e.g. `[WETH, 3000, WETH]`) when calling `V3_SWAP_EXACT_IN`.
+  - **Result**: The router calls into a pool address that does not exist and the transaction reverts without a helpful error message.
+  - **Bug?**: Yes. There is no validation that the two tokens differ when building the v3 path.
+
 ## Forced ETH via Self-Destruct
 - **Vector**: Send ETH to the router via a contract that self-destructs.
 - **Result**: ETH is received without calling `receive()` and the balance increases.
