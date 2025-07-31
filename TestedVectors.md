@@ -174,3 +174,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `MSG_SENDER`.
   - **Result**: The router checks the balance of address `0x1` instead of the caller and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command does not map sentinel addresses and fails for valid callers.
+
+## Balance check using ADDRESS_THIS
+  - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `ADDRESS_THIS`.
+  - **Result**: The router checks the balance of address `0x2` rather than its own address and reverts with `BalanceTooLow`.
+  - **Bug?**: Yes. The command fails to map the `ADDRESS_THIS` sentinel to `address(this)`.
