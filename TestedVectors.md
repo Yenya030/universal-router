@@ -203,6 +203,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router checks the balance of address `0x2` rather than its own address and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command fails to map the `ADDRESS_THIS` sentinel to `address(this)`.
 
+## WrapETH using CONTRACT_BALANCE after forced ETH
+  - **Vector**: Force ETH into the router via a self-destructing contract then call `WRAP_ETH` with amount `CONTRACT_BALANCE`.
+  - **Result**: The router wraps all ETH it holds, including the forced funds, and transfers WETH to the caller.
+  - **Status**: Handled – forced ETH can be withdrawn but no user funds are at risk.
+
 ## V4 Position Manager call forwards entire ETH balance
   - **Vector**: Force ETH into the router and invoke `V4_POSITION_MANAGER_CALL` with a basic `modifyLiquidities` call.
   - **Result**: The router forwarded all ETH it held to the position manager, demonstrating the entire balance is sent.
