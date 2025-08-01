@@ -202,3 +202,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `ADDRESS_THIS`.
   - **Result**: The router checks the balance of address `0x2` rather than its own address and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command fails to map the `ADDRESS_THIS` sentinel to `address(this)`.
+
+## V4 Position Manager call forwards entire ETH balance
+  - **Vector**: Force ETH into the router and invoke `V4_POSITION_MANAGER_CALL` with a basic `modifyLiquidities` call.
+  - **Result**: The router forwarded all ETH it held to the position manager, demonstrating the entire balance is sent.
+  - **Status**: Handled – behaviour confirmed in `V4PositionManagerValue.t.sol` but may be unexpected.
