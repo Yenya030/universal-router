@@ -212,3 +212,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Force ETH into the router and invoke `V4_POSITION_MANAGER_CALL` with a basic `modifyLiquidities` call.
   - **Result**: The router forwarded all ETH it held to the position manager, demonstrating the entire balance is sent.
   - **Status**: Handled – behaviour confirmed in `V4PositionManagerValue.t.sol` but may be unexpected.
+
+## Reentrancy via ERC20 transfer
+  - **Vector**: Use an ERC20 token whose `transfer` function reenters the router during a `TRANSFER` command.
+  - **Result**: The reentrant call is rejected with `ContractLocked` and the token transaction reverts.
+  - **Status**: Handled – the router's lock prevents reentrancy during ERC20 transfers.
