@@ -294,6 +294,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `PERMIT2_TRANSFER_FROM` with the recipient set to `0x0000000000000000000000000000000000000002`.
   - **Result**: Tokens are transferred to the router instead of the provided address because the router maps address `2` to `ADDRESS_THIS`.
   - **Test**: `Permit2ReservedAddress.t.sol` shows the router keeping the tokens.
+## Permit2 batch transfer to reserved address
+  - **Vector**: Call `PERMIT2_TRANSFER_FROM_BATCH` with a batch entry whose recipient is `0x0000000000000000000000000000000000000002`.
+  - **Result**: Tokens are sent to address `2` instead of the router because batch recipients are not mapped.
+  - **Test**: `Permit2BatchReservedAddress.t.sol` demonstrates tokens landing at the raw address.
+
 
 ## Invalid V4 pool initialization
   - **Vector**: Call `V4_INITIALIZE_POOL` with a pool key where `currency0` and `currency1` are identical.
