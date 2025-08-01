@@ -253,3 +253,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Supply a V4 swap path where a pool key uses the same token for both `currency0` and `currency1`.
   - **Result**: The router forwards the malformed pool key to the pool manager which reverts, demonstrating no validation occurs.
   - **Bug?**: Yes. The router relies on pool manager errors instead of rejecting invalid paths.
+
+## Zero Liquidity V2 pair
+  - **Vector**: Create a V2 pair with no liquidity and attempt a swap through the router.
+  - **Result**: The router transfers tokens to the empty pair then reverts with `InvalidReserves`, leaving the tokens stuck in the pair.
+  - **Bug?**: Yes. The router does not check that the pair has liquidity before transferring funds.
