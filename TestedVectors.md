@@ -217,6 +217,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the token argument set to `Constants.ETH` (address `0`).
   - **Result**: The router attempts to call `balanceOf` on address `0` and reverts unexpectedly.
   - **Status**: **Bug discovered** – the command does not handle the ETH sentinel and reverts.
+## Permit2 transfer with ETH token
+  - **Vector**: Call `PERMIT2_TRANSFER_FROM` using `Constants.ETH` as the token address.
+  - **Result**: The router forwards the call to Permit2 which reverts with `TRANSFER_FROM_FAILED`.
+  - **Status**: Handled – Permit2 cannot transfer ETH so the command fails.
+
 
 ## WrapETH using CONTRACT_BALANCE after forced ETH
   - **Vector**: Force ETH into the router via a self-destructing contract then call `WRAP_ETH` with amount `CONTRACT_BALANCE`.
