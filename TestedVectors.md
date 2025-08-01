@@ -213,6 +213,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router checks the balance of address `0x2` rather than its own address and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command fails to map the `ADDRESS_THIS` sentinel to `address(this)`.
 
+## Balance check with ETH token
+  - **Vector**: Call `BALANCE_CHECK_ERC20` with the token argument set to `Constants.ETH` (address `0`).
+  - **Result**: The router attempts to call `balanceOf` on address `0` and reverts unexpectedly.
+  - **Status**: **Bug discovered** – the command does not handle the ETH sentinel and reverts.
+
 ## WrapETH using CONTRACT_BALANCE after forced ETH
   - **Vector**: Force ETH into the router via a self-destructing contract then call `WRAP_ETH` with amount `CONTRACT_BALANCE`.
   - **Result**: The router wraps all ETH it holds, including the forced funds, and transfers WETH to the caller.
