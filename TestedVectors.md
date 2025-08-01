@@ -93,6 +93,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Finding:** The router treats address `2` as `ADDRESS_THIS`, so the wrapped ETH remains with the router instead of being sent to the target address.
   - **Test:** `WrapETHReservedAddressTest` shows the WETH balance is credited to the router.
 
+## UnwrapWETH to reserved address
+  - **Vector:** Call `UNWRAP_WETH` with the recipient set to `0x0000000000000000000000000000000000000002`.
+  - **Finding:** The router interprets address `2` as `ADDRESS_THIS`, leaving the unwrapped ETH in the router.
+  - **Test:** `UnwrapWETHReservedAddressTest` demonstrates the ETH remains with the router after unwrapping.
+
 
 ## Looping V2 swap path**: Crafted a path where the last hop returns to the first token (e.g. `[token0, token1, token0]`).
   - **Result**: Transaction reverts with `UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT` showing Universal Router does not gracefully handle looping paths.
@@ -208,6 +213,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router checks the balance of address `0x2` rather than its own address and reverts with `BalanceTooLow`.
   - **Bug?**: Yes. The command fails to map the `ADDRESS_THIS` sentinel to `address(this)`.
 
+## Balance check with ETH token
+  - **Vector**: Call `BALANCE_CHECK_ERC20` with the token argument set to `Constants.ETH` (address `0`).
+  - **Result**: The router attempts to call `balanceOf` on address `0` and reverts unexpectedly.
+  - **Status**: **Bug discovered** – the command does not handle the ETH sentinel and reverts.
+
 ## WrapETH using CONTRACT_BALANCE after forced ETH
   - **Vector**: Force ETH into the router via a self-destructing contract then call `WRAP_ETH` with amount `CONTRACT_BALANCE`.
   - **Result**: The router wraps all ETH it holds, including the forced funds, and transfers WETH to the caller.
@@ -258,6 +268,10 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Create a V2 pair with no liquidity and attempt a swap through the router.
   - **Result**: The router transfers tokens to the empty pair then reverts with `InvalidReserves`, leaving the tokens stuck in the pair.
   - **Bug?**: Yes. The router does not check that the pair has liquidity before transferring funds.
+## Invalid V4 pool initialization
+  - **Vector**: Call `V4_INITIALIZE_POOL` with a pool key where `currency0` and `currency1` are identical.
+  - **Result**: The pool manager reverts and the router bubbles up the failure.
+  - **Status**: Handled – router does not create pools with duplicate tokens.
 
 ## Recursive sub-plan execution
   - **Vector**: Construct commands that repeatedly call `EXECUTE_SUB_PLAN` creating a deeply nested plan.
