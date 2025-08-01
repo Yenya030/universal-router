@@ -217,3 +217,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Use an ERC20 token whose `transfer` function reenters the router during a `TRANSFER` command.
   - **Result**: The reentrant call is rejected with `ContractLocked` and the token transaction reverts.
   - **Status**: Handled – the router's lock prevents reentrancy during ERC20 transfers.
+## ETH Sent with Empty Commands
+- **Vector**: Call `execute` with no commands but send ETH in the transaction.
+- **Result**: The ETH remains in the router and can be swept by any address using the `SWEEP` command.
+- **Status**: Handled – funds are not automatically returned but are withdrawable by anyone.
+
