@@ -217,3 +217,7 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Use an ERC20 token whose `transfer` function reenters the router during a `TRANSFER` command.
   - **Result**: The reentrant call is rejected with `ContractLocked` and the token transaction reverts.
   - **Status**: Handled – the router's lock prevents reentrancy during ERC20 transfers.
+## Duplicate tokens in V3 path (exact output)
+- **Vector**: Provide a Uniswap v3 path with identical tokens such as `[WETH, 3000, WETH]` when calling `V3_SWAP_EXACT_OUT`.
+- **Result**: The router attempts to access a non-existent pool and reverts. Tested in `UniswapV3DuplicateTokenExactOut.t.sol`.
+- **Status**: Handled – the router fails on an invalid pool address.
