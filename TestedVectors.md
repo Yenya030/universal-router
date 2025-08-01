@@ -318,3 +318,8 @@ This document lists the attack vectors that have been tested against the Univers
 - **Vector**: Provide input data shorter than expected for the `TRANSFER` command.
 - **Result**: The router executed without reverting, treating missing parameters as zero and leaving balances unchanged.
 - **Status**: Handled – short inputs are ignored without affecting state.
+
+## Nonexistent V3 pool
+  - **Vector**: Attempt a V3 swap with a fee tier for which no pool exists (e.g. WETH/DAI with fee 123).
+  - **Result**: The swap call reverted before any tokens were transferred, leaving balances unchanged.
+  - **Status**: Handled – the router does not transfer tokens when the pool is missing.
