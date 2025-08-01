@@ -93,6 +93,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Finding:** The router treats address `2` as `ADDRESS_THIS`, so the wrapped ETH remains with the router instead of being sent to the target address.
   - **Test:** `WrapETHReservedAddressTest` shows the WETH balance is credited to the router.
 
+## UnwrapWETH to reserved address
+  - **Vector:** Call `UNWRAP_WETH` with the recipient set to `0x0000000000000000000000000000000000000002`.
+  - **Finding:** The router interprets address `2` as `ADDRESS_THIS`, leaving the unwrapped ETH in the router.
+  - **Test:** `UnwrapWETHReservedAddressTest` demonstrates the ETH remains with the router after unwrapping.
+
 
 ## Looping V2 swap path**: Crafted a path where the last hop returns to the first token (e.g. `[token0, token1, token0]`).
   - **Result**: Transaction reverts with `UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT` showing Universal Router does not gracefully handle looping paths.
