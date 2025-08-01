@@ -84,9 +84,14 @@ This document lists the attack vectors that have been tested against the Univers
 
 
 ## Transfer to reserved addresses
-- **Vector:** Attempt to transfer ERC20 tokens to address `0x0000000000000000000000000000000000000001` via the router.
-- **Finding:** Tokens are incorrectly sent to the caller instead of the intended address. This occurs because the router maps address `1` to `MSG_SENDER`.
-- **Test:** `testTransferToReservedAddress` in `test/foundry-tests/UniversalRouter.t.sol` demonstrates the issue.
+  - **Vector:** Attempt to transfer ERC20 tokens to address `0x0000000000000000000000000000000000000001` via the router.
+  - **Finding:** Tokens are incorrectly sent to the caller instead of the intended address. This occurs because the router maps address `1` to `MSG_SENDER`.
+  - **Test:** `testTransferToReservedAddress` in `test/foundry-tests/UniversalRouter.t.sol` demonstrates the issue.
+
+## WrapETH to reserved address
+  - **Vector:** Call `WRAP_ETH` with the recipient set to `0x0000000000000000000000000000000000000002`.
+  - **Finding:** The router treats address `2` as `ADDRESS_THIS`, so the wrapped ETH remains with the router instead of being sent to the target address.
+  - **Test:** `WrapETHReservedAddressTest` shows the WETH balance is credited to the router.
 
 
 ## Looping V2 swap path**: Crafted a path where the last hop returns to the first token (e.g. `[token0, token1, token0]`).
@@ -238,6 +243,16 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Attempt a V2 swap using tokens that do not have an existing pair.
   - **Result**: The router transfers tokens to the computed pair address and then reverts when calling `getReserves`, leaving the funds stuck.
   - **Bug?**: Yes. Pair existence is not checked before transferring funds.
+
+## Overload execute
+- **Vector**: Call the overloaded `execute` function without a deadline.
+- **Result**: The transaction succeeds even when a past deadline would cause the other overload to revert.
+- **Status**: Handled – the router provides a no-deadline overload intentionally.
+
+## Duplicate tokens in V4 path
+  - **Vector**: Supply a V4 swap path where a pool key uses the same token for both `currency0` and `currency1`.
+  - **Result**: The router forwards the malformed pool key to the pool manager which reverts, demonstrating no validation occurs.
+  - **Bug?**: Yes. The router relies on pool manager errors instead of rejecting invalid paths.
 
 ## Zero Liquidity V2 pair
   - **Vector**: Create a V2 pair with no liquidity and attempt a swap through the router.
