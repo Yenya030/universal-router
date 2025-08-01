@@ -243,6 +243,12 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Use an ERC20 token whose `transfer` function reenters the router during a `TRANSFER` command.
   - **Result**: The reentrant call is rejected with `ContractLocked` and the token transaction reverts.
   - **Status**: Handled – the router's lock prevents reentrancy during ERC20 transfers.
+
+## Reentrancy via ETH transfer
+  - **Vector**: Sweep ETH to a contract whose `receive()` function calls `UniversalRouter.execute` again.
+  - **Result**: The reentrant call reverts with `ContractLocked` while the sweep succeeds.
+  - **Test**: `ReentrancyReceiver.t.sol`.
+  - **Status**: Handled – lock prevents reentrancy on ETH transfers.
 ## TRANSFER using CONTRACT_BALANCE with ETH
 - **Vector**: Call `TRANSFER` with the token set to `ETH` and the amount set to `CONTRACT_BALANCE`.
 - **Result**: The router attempts to send `2^255` wei and reverts with `ETH_TRANSFER_FAILED` because the value exceeds its balance.
