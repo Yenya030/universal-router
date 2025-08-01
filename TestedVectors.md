@@ -221,3 +221,8 @@ This document lists the attack vectors that have been tested against the Univers
 - **Vector**: Call `TRANSFER` with the token set to `ETH` and the amount set to `CONTRACT_BALANCE`.
 - **Result**: The router attempts to send `2^255` wei and reverts with `ETH_TRANSFER_FAILED` because the value exceeds its balance.
 - **Status**: Handled – the call reverts preventing misuse of the flag with ETH.
+
+## Duplicate tokens in V3 path (exact output)
+- **Vector**: Provide a Uniswap v3 path with identical tokens such as `[WETH, 3000, WETH]` when calling `V3_SWAP_EXACT_OUT`.
+- **Result**: The router attempts to access a non-existent pool and reverts. Tested in `UniswapV3DuplicateTokenExactOut.t.sol`.
+- **Status**: Handled – the router fails on an invalid pool address.
