@@ -242,4 +242,7 @@ This document lists the attack vectors that have been tested against the Univers
 ## Nonexistent V2 pair
   - **Vector**: Attempt a V2 swap using tokens that do not have an existing pair.
   - **Result**: The router transfers tokens to the computed pair address and then reverts when calling `getReserves`, leaving the funds stuck.
-  - **Bug?**: Yes. Pair existence is not checked before transferring funds.
+  - **Bug?**: Yes. Pair existence is not checked before transferring funds.\n## Execute Without Deadline
+- **Vector**: Call the overloaded `execute` function without a deadline.
+- **Result**: The transaction succeeds even when a past deadline would cause the other overload to revert.
+- **Status**: Handled – the router provides a no-deadline overload intentionally.
