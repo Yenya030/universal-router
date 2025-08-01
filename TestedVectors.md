@@ -232,3 +232,9 @@ This document lists the attack vectors that have been tested against the Univers
 - **Vector**: Call `execute` with no commands but send ETH in the transaction.
 - **Result**: The ETH remains in the router and can be swept by any address using the `SWEEP` command.
 - **Status**: Handled – funds are not automatically returned but are withdrawable by anyone.
+
+
+## Nonexistent V2 pair
+  - **Vector**: Attempt a V2 swap using tokens that do not have an existing pair.
+  - **Result**: The router transfers tokens to the computed pair address and then reverts when calling `getReserves`, leaving the funds stuck.
+  - **Bug?**: Yes. Pair existence is not checked before transferring funds.
