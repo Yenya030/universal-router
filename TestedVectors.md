@@ -223,9 +223,14 @@ This document lists the attack vectors that have been tested against the Univers
 - **Status**: Handled – the call reverts preventing misuse of the flag with ETH.
 
 ## Duplicate tokens in V3 path (exact output)
-- **Vector**: Provide a Uniswap v3 path with identical tokens such as `[WETH, 3000, WETH]` when calling `V3_SWAP_EXACT_OUT`.
-- **Result**: The router attempts to access a non-existent pool and reverts. Tested in `UniswapV3DuplicateTokenExactOut.t.sol`.
-- **Status**: Handled – the router fails on an invalid pool address.
+  - **Vector**: Provide a Uniswap v3 path with identical tokens such as `[WETH, 3000, WETH]` when calling `V3_SWAP_EXACT_OUT`.
+  - **Result**: The router attempts to access a non-existent pool and reverts. Tested in `UniswapV3DuplicateTokenExactOut.t.sol`.
+  - **Status**: Handled – the router fails on an invalid pool address.
+
+## Duplicate tokens in V4 path
+  - **Vector**: Supply a V4 swap path where a pool key uses the same token for both `currency0` and `currency1`.
+  - **Result**: The router forwards the malformed pool key to the pool manager which reverts, demonstrating no validation occurs.
+  - **Bug?**: Yes. The router relies on pool manager errors instead of rejecting invalid paths.
 
 
 ## ETH Sent with Empty Commands
