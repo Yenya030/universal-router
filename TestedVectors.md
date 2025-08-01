@@ -103,6 +103,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Finding:** The router maps address `1` to `MSG_SENDER`, so the swept tokens go to the caller instead of the target address.
   - **Test:** `SweepReservedAddressTest` verifies tokens are sent to the caller.
 
+## PayPortion to reserved address
+  - **Vector:** Call `PAY_PORTION` with the recipient set to `0x0000000000000000000000000000000000000001` or `0x0000000000000000000000000000000000000002`.
+  - **Finding:** The router interprets these addresses as `MSG_SENDER` or `ADDRESS_THIS`, leaving funds with the caller or router instead of the intended address.
+  - **Test:** `PayPortionReservedAddress.t.sol` demonstrates tokens are misdirected.
+
 
 
 ## Looping V2 swap path**: Crafted a path where the last hop returns to the first token (e.g. `[token0, token1, token0]`).
