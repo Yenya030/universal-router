@@ -297,3 +297,8 @@ This document lists the attack vectors that have been tested against the Univers
 - **Vector**: Call `UNWRAP_WETH` when the router holds less WETH than the `amountMinimum` argument.
 - **Result**: The call reverts with `InsufficientETH`, proving the router checks its WETH balance before unwrapping.
 - **Status**: Handled – the router prevents unwrapping when funds are insufficient.
+
+## Truncated command input
+- **Vector**: Provide input data shorter than expected for the `TRANSFER` command.
+- **Result**: The router executed without reverting, treating missing parameters as zero and leaving balances unchanged.
+- **Status**: Handled – short inputs are ignored without affecting state.
