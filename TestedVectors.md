@@ -276,6 +276,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router transfers tokens to the computed pair address and then reverts when calling `getReserves`, leaving the funds stuck.
   - **Bug?**: Yes. Pair existence is not checked before transferring funds.
 
+## Nonexistent V3 pool
+  - **Vector**: Attempt a V3 swap using tokens that do not have an existing pool.
+  - **Result**: The call reverts when attempting the `swap` and no tokens are transferred, so funds remain with the router.
+  - **Status**: Handled – the router reverts before any tokens leave the contract.
+
 ## Overload execute
 - **Vector**: Call the overloaded `execute` function without a deadline.
 - **Result**: The transaction succeeds even when a past deadline would cause the other overload to revert.
