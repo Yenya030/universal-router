@@ -192,6 +192,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The second swap succeeds, demonstrating the `MaxInputAmount` transient storage was cleared when the first call reverted.
   - **Status**: Handled – reverting a swap does not leave stale values in transient storage.
 
+## MaxInputAmount revert before clearing
+  - **Vector**: Trigger a revert inside `V3_SWAP_EXACT_OUT` before the call resets `MaxInputAmount`.
+  - **Result**: `MaxInputAmountRouterReset.t.sol` shows the value is zero after the revert, so the storage does not persist.
+  - **Status**: Handled – the transient slot is cleared on failure.
+
 
 ## Balance check using ADDRESS_THIS
   - **Vector**: Call `BALANCE_CHECK_ERC20` with the owner argument set to the sentinel `ADDRESS_THIS`.
