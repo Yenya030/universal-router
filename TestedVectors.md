@@ -217,6 +217,23 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Use an ERC20 token whose `transfer` function reenters the router during a `TRANSFER` command.
   - **Result**: The reentrant call is rejected with `ContractLocked` and the token transaction reverts.
   - **Status**: Handled – the router's lock prevents reentrancy during ERC20 transfers.
+## TRANSFER using CONTRACT_BALANCE with ETH
+- **Vector**: Call `TRANSFER` with the token set to `ETH` and the amount set to `CONTRACT_BALANCE`.
+- **Result**: The router attempts to send `2^255` wei and reverts with `ETH_TRANSFER_FAILED` because the value exceeds its balance.
+- **Status**: Handled – the call reverts preventing misuse of the flag with ETH.
+
+## Duplicate tokens in V3 path (exact output)
+- **Vector**: Provide a Uniswap v3 path with identical tokens such as `[WETH, 3000, WETH]` when calling `V3_SWAP_EXACT_OUT`.
+- **Result**: The router attempts to access a non-existent pool and reverts. Tested in `UniswapV3DuplicateTokenExactOut.t.sol`.
+- **Status**: Handled – the router fails on an invalid pool address.
+
+
+## ETH Sent with Empty Commands
+- **Vector**: Call `execute` with no commands but send ETH in the transaction.
+- **Result**: The ETH remains in the router and can be swept by any address using the `SWEEP` command.
+- **Status**: Handled – funds are not automatically returned but are withdrawable by anyone.
+
+
 ## Nonexistent V2 pair
   - **Vector**: Attempt a V2 swap using tokens that do not have an existing pair.
   - **Result**: The router transfers tokens to the computed pair address and then reverts when calling `getReserves`, leaving the funds stuck.
