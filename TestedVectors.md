@@ -98,6 +98,12 @@ This document lists the attack vectors that have been tested against the Univers
   - **Finding:** The router interprets address `2` as `ADDRESS_THIS`, leaving the unwrapped ETH in the router.
   - **Test:** `UnwrapWETHReservedAddressTest` demonstrates the ETH remains with the router after unwrapping.
 
+## Sweep to reserved address
+  - **Vector:** Call `SWEEP` with the recipient set to `0x0000000000000000000000000000000000000001`.
+  - **Finding:** The router maps address `1` to `MSG_SENDER`, so the swept tokens go to the caller instead of the target address.
+  - **Test:** `SweepReservedAddressTest` verifies tokens are sent to the caller.
+
+
 
 ## Looping V2 swap path**: Crafted a path where the last hop returns to the first token (e.g. `[token0, token1, token0]`).
   - **Result**: Transaction reverts with `UniswapV2: INSUFFICIENT_OUTPUT_AMOUNT` showing Universal Router does not gracefully handle looping paths.
