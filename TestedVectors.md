@@ -234,6 +234,11 @@ This document lists the attack vectors that have been tested against the Univers
   - **Result**: The router wraps all ETH it holds, including the forced funds, and transfers WETH to the caller.
   - **Status**: Handled – forced ETH can be withdrawn but no user funds are at risk.
 
+## WrapETH with excess `msg.value`
+  - **Vector**: Send more ETH with the transaction than the `WRAP_ETH` command amount specifies.
+  - **Result**: Only the requested amount is wrapped. The surplus ETH remains in the router and can later be swept by anyone.
+  - **Status**: **Bug discovered** – excess ETH is not refunded to the caller.
+
 ## V4 Position Manager call forwards entire ETH balance
   - **Vector**: Force ETH into the router and invoke `V4_POSITION_MANAGER_CALL` with a basic `modifyLiquidities` call.
   - **Result**: The router forwarded all ETH it held to the position manager, demonstrating the entire balance is sent.
