@@ -238,3 +238,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Attempt a V2 swap using tokens that do not have an existing pair.
   - **Result**: The router transfers tokens to the computed pair address and then reverts when calling `getReserves`, leaving the funds stuck.
   - **Bug?**: Yes. Pair existence is not checked before transferring funds.
+
+## Zero Liquidity V2 pair
+  - **Vector**: Create a V2 pair with no liquidity and attempt a swap through the router.
+  - **Result**: The router transfers tokens to the empty pair then reverts with `InvalidReserves`, leaving the tokens stuck in the pair.
+  - **Bug?**: Yes. The router does not check that the pair has liquidity before transferring funds.
