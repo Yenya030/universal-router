@@ -226,3 +226,9 @@ This document lists the attack vectors that have been tested against the Univers
 - **Vector**: Provide a Uniswap v3 path with identical tokens such as `[WETH, 3000, WETH]` when calling `V3_SWAP_EXACT_OUT`.
 - **Result**: The router attempts to access a non-existent pool and reverts. Tested in `UniswapV3DuplicateTokenExactOut.t.sol`.
 - **Status**: Handled – the router fails on an invalid pool address.
+
+
+## ETH Sent with Empty Commands
+- **Vector**: Call `execute` with no commands but send ETH in the transaction.
+- **Result**: The ETH remains in the router and can be swept by any address using the `SWEEP` command.
+- **Status**: Handled – funds are not automatically returned but are withdrawable by anyone.
