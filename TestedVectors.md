@@ -277,3 +277,7 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Construct commands that repeatedly call `EXECUTE_SUB_PLAN` creating a deeply nested plan.
   - **Result**: The transaction eventually reverts with an out-of-gas error once recursion depth grows large, preventing further execution.
   - **Status**: **Handled** – recursion is limited by EVM gas and call depth so no funds are lost.
+## Unwrap WETH with insufficient balance
+- **Vector**: Call `UNWRAP_WETH` when the router holds less WETH than the `amountMinimum` argument.
+- **Result**: The call reverts with `InsufficientETH`, proving the router checks its WETH balance before unwrapping.
+- **Status**: Handled – the router prevents unwrapping when funds are insufficient.
