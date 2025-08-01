@@ -258,3 +258,8 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Create a V2 pair with no liquidity and attempt a swap through the router.
   - **Result**: The router transfers tokens to the empty pair then reverts with `InvalidReserves`, leaving the tokens stuck in the pair.
   - **Bug?**: Yes. The router does not check that the pair has liquidity before transferring funds.
+
+## Recursive sub-plan execution
+  - **Vector**: Construct commands that repeatedly call `EXECUTE_SUB_PLAN` creating a deeply nested plan.
+  - **Result**: The transaction eventually reverts with an out-of-gas error once recursion depth grows large, preventing further execution.
+  - **Status**: **Handled** – recursion is limited by EVM gas and call depth so no funds are lost.
