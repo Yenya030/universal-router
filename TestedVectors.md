@@ -217,3 +217,7 @@ This document lists the attack vectors that have been tested against the Univers
   - **Vector**: Use an ERC20 token whose `transfer` function reenters the router during a `TRANSFER` command.
   - **Result**: The reentrant call is rejected with `ContractLocked` and the token transaction reverts.
   - **Status**: Handled – the router's lock prevents reentrancy during ERC20 transfers.
+## Nonexistent V2 pair
+  - **Vector**: Attempt a V2 swap using tokens that do not have an existing pair.
+  - **Result**: The router transfers tokens to the computed pair address and then reverts when calling `getReserves`, leaving the funds stuck.
+  - **Bug?**: Yes. Pair existence is not checked before transferring funds.
